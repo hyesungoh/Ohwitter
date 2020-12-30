@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { authService } from "FBase";
 
 const Auth = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [newAccount, setNewAccount] = useState<boolean>(true);
 
     const onChange = (event: Event | any) => {
         const {
@@ -16,8 +18,26 @@ const Auth = () => {
         }
     };
 
-    const onSubmit = (event: Event | any) => {
+    const onSubmit = async (event: Event | any) => {
         event.preventDefault();
+
+        try {
+            let data;
+            if (newAccount) {
+                data = await authService.createUserWithEmailAndPassword(
+                    email,
+                    password
+                );
+            } else {
+                data = await authService.signInWithEmailAndPassword(
+                    email,
+                    password
+                );
+            }
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -39,7 +59,10 @@ const Auth = () => {
                     value={password}
                     onChange={onChange}
                 />
-                <input type="submit" value="Sign in" />
+                <input
+                    type="submit"
+                    value={newAccount ? "Sign Up" : "Sign In"}
+                />
             </form>
 
             <div>
