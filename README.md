@@ -75,6 +75,7 @@ npm install --save @types/firebase
 ```
 
 4. Create Firebase file
+
 ```typescript
 // Firebase.ts
 import firebase from "firebase/app";
@@ -92,3 +93,20 @@ const firebaseConfig: object = {
 export default firebase.initializeApp(firebaseConfig);
 ```
 
+#### Develop
+
+-   Firebase Authentication
+
+```ts
+// FBase.ts
+...
+import "firebase/auth";
+
+...
+export const authService = firebase.auth();
+```
+
+```tsx
+// somewhere.tsx
+import { authService } from "FBase";
+```

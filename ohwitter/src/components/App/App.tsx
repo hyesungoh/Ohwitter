@@ -1,10 +1,17 @@
-import React from "react";
-import AppRouter from "../Router";
+import React, { useState } from "react";
+import AppRouter from "components/Router";
+import { authService } from "FBase";
 
-import "./App.scss";
+import "components/App/App.scss";
 
 function App() {
-    return <AppRouter />;
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    
+    return (
+        <>
+            <AppRouter isLoggedIn={isLoggedIn} />
+        </>
+    );
 }
 
 export default App;
