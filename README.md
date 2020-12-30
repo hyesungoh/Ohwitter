@@ -95,7 +95,7 @@ export default firebase.initializeApp(firebaseConfig);
 
 #### Develop
 
--   Firebase Authentication
+-   ##### Firebase Authentication setting
 
 ```ts
 // FBase.ts
@@ -110,3 +110,18 @@ export const authService = firebase.auth();
 // somewhere.tsx
 import { authService } from "FBase";
 ```
+
+-   ##### get current user
+
+```tsx
+// User | null
+authService.currentUser;
+```
+
+-   ##### Sign In with email setting
+
+![img](https://user-images.githubusercontent.com/26461307/103371869-e138f400-4b13-11eb-96bb-65eaec2ffd8d.png)
+
+-   ##### Sign In with github setting (Create new OAuth Apps)
+
+![스크린샷 2020-12-31 오전 2 55 41](https://user-images.githubusercontent.com/26461307/103371852-d54d3200-4b13-11eb-8c2c-4995ebbcc431.png)

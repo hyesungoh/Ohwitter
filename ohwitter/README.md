@@ -16,13 +16,11 @@ const someCompo = ({ someBool, someNum }: someInter) => {};
 -   Setting
 
 ```json
-{
-    "compilerOptions": {
-        "baseUrl": "src",
-        ...
-    },
-    "include": ["src"]
-}
+// tsconfig.json
+"compilerOptions": {
+    "baseUrl": "src", // 추가
+    ...
+},
 ```
 
 -   Usage
