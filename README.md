@@ -118,10 +118,35 @@ import { authService } from "FBase";
 authService.currentUser;
 ```
 
--   ##### Sign In with email setting
+-   ##### Sign In setting
 
 ![img](https://user-images.githubusercontent.com/26461307/103371869-e138f400-4b13-11eb-96bb-65eaec2ffd8d.png)
 
 -   ##### Sign In with github setting (Create new OAuth Apps)
 
 ![스크린샷 2020-12-31 오전 2 55 41](https://user-images.githubusercontent.com/26461307/103371852-d54d3200-4b13-11eb-8c2c-4995ebbcc431.png)
+
+-   ##### Create User or Sign In With Email and Password
+
+```tsx
+const onSubmit = async (event: any) => {
+    event.preventDefault();
+    try {
+        if (newAccount) {
+            await authService.createUserWithEmailAndPassword(email, password);
+        } else {
+            await authService.signInWithEmailAndPassword(email, password);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+```
+
+-   ##### Auth state Persistence
+
+| Value   | Description                                                                     |
+| ------- | ------------------------------------------------------------------------------- |
+| local (Default) | 브라우저가 닫혀도 상태가 유지됨. 상태 삭제를 원할 시 명시적으로 로그아웃해야함. |
+| session | 햔재 세션, 탭에서만 상태가 유지됨. 인증된 탭이 닫힐 시 삭제됨.                  |
+| none    | 상태가 메모리에만 저장됨. 활동이 새로고침되면 삭제됨.                           |
