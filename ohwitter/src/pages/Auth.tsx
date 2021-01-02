@@ -5,6 +5,7 @@ const Auth = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [newAccount, setNewAccount] = useState<boolean>(true);
+    const [error, setError] = useState<string>("");
 
     const onChange = (event: Event | any) => {
         const {
@@ -36,9 +37,11 @@ const Auth = () => {
             }
             console.log(data);
         } catch (error) {
-            console.log(error);
+            setError(error.message);
         }
     };
+
+    const toggleSign = () => setNewAccount((prev) => !prev);
 
     return (
         <div>
@@ -64,7 +67,8 @@ const Auth = () => {
                     value={newAccount ? "Sign Up" : "Sign In"}
                 />
             </form>
-
+            <span>{error}</span>
+            <span onClick={toggleSign}>change to {newAccount? "Sign In" : "Sign Up"}</span>
             <div>
                 <button>Continue with Goggle</button>
                 <button>Continue with Github</button>
