@@ -150,3 +150,19 @@ const onSubmit = async (event: any) => {
 | local (Default) | 브라우저가 닫혀도 상태가 유지됨. 상태 삭제를 원할 시 명시적으로 로그아웃해야함. |
 | session         | 햔재 세션, 탭에서만 상태가 유지됨. 인증된 탭이 닫힐 시 삭제됨.                  |
 | none            | 상태가 메모리에만 저장됨. 활동이 새로고침되면 삭제됨.                           |
+
+-   #### onAuthStateChanged
+    -   eventListener 속성을 갖으며 Firebase init, sign in, up, out시 trigger
+
+```tsx
+useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+        if (user) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+        setInit(true);
+    });
+}, []);
+```
