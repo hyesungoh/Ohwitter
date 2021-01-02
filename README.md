@@ -93,9 +93,9 @@ const firebaseConfig: object = {
 export default firebase.initializeApp(firebaseConfig);
 ```
 
-#### Develop
+## Develop
 
--   ##### Firebase Authentication setting
+-   #### Firebase Authentication setting
 
 ```ts
 // FBase.ts
@@ -111,22 +111,22 @@ export const authService = firebase.auth();
 import { authService } from "FBase";
 ```
 
--   ##### get current user
+-   #### get current user
 
 ```tsx
 // User | null
 authService.currentUser;
 ```
 
--   ##### Sign In setting
+-   #### Sign In setting
 
 ![img](https://user-images.githubusercontent.com/26461307/103371869-e138f400-4b13-11eb-96bb-65eaec2ffd8d.png)
 
--   ##### Sign In with github setting (Create new OAuth Apps)
+-   #### Sign In with github setting (Create new OAuth Apps)
 
 ![github](https://user-images.githubusercontent.com/26461307/103374372-c918a300-4b1a-11eb-92e3-964403a3b66c.png)
 
--   ##### Create User or Sign In With Email and Password
+-   #### Create User or Sign In With Email and Password
 
 ```tsx
 const onSubmit = async (event: any) => {
@@ -143,12 +143,12 @@ const onSubmit = async (event: any) => {
 };
 ```
 
--   ##### Auth state Persistence
+-   #### Auth state Persistence
 
 | Value           | Description                                                                     |
 | --------------- | ------------------------------------------------------------------------------- |
 | local (Default) | 브라우저가 닫혀도 상태가 유지됨. 상태 삭제를 원할 시 명시적으로 로그아웃해야함. |
-| session         | 햔재 세션, 탭에서만 상태가 유지됨. 인증된 탭이 닫힐 시 삭제됨.                  |
+| session         | 현재 세션, 탭에서만 상태가 유지됨. 인증된 탭이 닫힐 시 삭제됨.                  |
 | none            | 상태가 메모리에만 저장됨. 활동이 새로고침되면 삭제됨.                           |
 
 -   #### onAuthStateChanged
@@ -166,3 +166,31 @@ useEffect(() => {
     });
 }, []);
 ```
+
+-   #### Social Log In
+    -   provider을 생성, 사용하여 간단하게 구현 가능
+
+```tsx
+const onClickSocial = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+) => {
+    const { name } = event.target as HTMLButtonElement;
+
+    let provider: any;
+    if (name === "google") {
+        provider = new firebaseInstance.auth.GoogleAuthProvider();
+    } else if (name === "github") {
+        provider = new firebaseInstance.auth.GithubAuthProvider();
+    }
+
+    await authService.signInWithPopup(provider);
+};
+```
+
+-   #### Sign Out
+
+```tsx
+// firebase.auth().signOut();
+authService.signOut();
+```
+
