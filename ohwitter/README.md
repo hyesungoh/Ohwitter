@@ -46,3 +46,14 @@ const onClickSocial = (
     console.log(name);
 };
 ```
+
+-   #### Redirect using react-router-dom
+
+```tsx
+import { useHistory } from "react-router-dom";
+
+const someFunc = () => {
+    const history = useHistory();
+    history.push("/");
+};
+```
