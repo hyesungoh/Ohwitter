@@ -35,3 +35,14 @@ import Auth from "pages/Auth";
 // src/FBase.ts
 import { authService } from "FBase";
 ```
+
+#### casting object
+
+```tsx
+const onClickSocial = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+) => {
+    const { name } = event.target as HTMLButtonElement;
+    console.log(name);
+};
+```
