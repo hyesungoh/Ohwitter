@@ -1,8 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { dbService } from "FBase";
 
 const Home = () => {
     const [text, setText] = useState<string>("");
+    const [ohweets, setOhweets] = useState<any[]>([]);
+
+    useEffect(() => {
+        getOhweets();
+    }, []);
+
+    const getOhweets = async () => {
+        const data: firebase.default.firestore.QuerySnapshot = await dbService
+            .collection("ohweets")
+            .get();
+
+        data.forEach(
+            (doc: firebase.default.firestore.QueryDocumentSnapshot) => {
+                const ohweetObject = {
+                    ...doc.data(),
+                    id: doc.id,
+                };
+
+                setOhweets((prev) => [ohweetObject, ...prev]);
+            }
+        );
+    };
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -22,7 +44,6 @@ const Home = () => {
 
         setText(value);
     };
-
     return (
         <div>
             <form onSubmit={onSubmit}>
@@ -35,6 +56,14 @@ const Home = () => {
                 />
                 <input type="submit" value="Post It" />
             </form>
+
+            <div>
+                {ohweets.map(({ text, id }) => (
+                    <div key={id}>
+                        <h4>{text}</h4>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

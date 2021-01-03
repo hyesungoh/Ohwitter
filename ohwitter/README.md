@@ -57,3 +57,9 @@ const someFunc = () => {
     history.push("/");
 };
 ```
+
+#### setState with function
+    - setState 시 함수를 전달하면 이전 값에 접근할 수 있음
+```tsx
+setSomething((prev) => [newData, ...prev]);
+```
