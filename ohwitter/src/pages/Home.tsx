@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { dbService } from "FBase";
+import Ohweet from "components/Ohweet";
 
 interface HomeProps {
     userObj: firebase.default.User | null;
@@ -13,8 +14,8 @@ const Home = ({ userObj }: HomeProps) => {
         // getOhweets();
         dbService.collection("ohweets").onSnapshot((snapshot) => {
             const ohweetsArray = snapshot.docs.map((doc) => ({
-                id: doc.id,
                 ...doc.data(),
+                id: doc.id,
             }));
             setOhweets(ohweetsArray);
         });
@@ -70,10 +71,12 @@ const Home = ({ userObj }: HomeProps) => {
             </form>
 
             <div>
-                {ohweets.map(({ text, id }) => (
-                    <div key={id}>
-                        <h4>{text}</h4>
-                    </div>
+                {ohweets.map((ohweet) => (
+                    <Ohweet
+                        key={ohweet.id}
+                        ohweetObj={ohweet}
+                        isOwner={ohweet.writer === (userObj !== null? userObj.uid : "")}
+                    />
                 ))}
             </div>
         </div>
