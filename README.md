@@ -99,11 +99,10 @@ export default firebase.initializeApp(firebaseConfig);
 
 ```ts
 // FBase.ts
-...
 import "firebase/auth";
 
 ...
-export const authService = firebase.auth();
+export const authService: firebase.auth.Auth = firebase.auth();
 ```
 
 ```tsx
@@ -111,7 +110,7 @@ export const authService = firebase.auth();
 import { authService } from "FBase";
 ```
 
--   #### get current user
+-   #### Get current user
 
 ```tsx
 // User | null
@@ -152,7 +151,7 @@ const onSubmit = async (event: any) => {
 | none            | 상태가 메모리에만 저장됨. 활동이 새로고침되면 삭제됨.                           |
 
 -   #### onAuthStateChanged
-    -   eventListener 속성을 갖으며 Firebase init, sign in, up, out시 trigger
+    -   eventListener 속성을 가지며 Firebase init, sign in, up, out시 trigger
 
 ```tsx
 useEffect(() => {
@@ -194,3 +193,107 @@ const onClickSocial = async (
 authService.signOut();
 ```
 
+-   #### Create Database
+
+![스크린샷 2021-01-03 오후 6 16 47](https://user-images.githubusercontent.com/26461307/103475377-fce01b00-4def-11eb-8b4f-509d3d71a19d.png)
+
+```terminal
+asia-northeast1 === Tokyo
+asia-northeast2 === Osaka
+asia-northeast3 === Seoul
+```
+
+```ts
+import "firebase/firestore";
+...
+
+export const dbService: firebase.firestore.Firestore = firebase.firestore();
+```
+
+-   #### Cloud Firestore
+
+    -   `NoSQL`
+        -   `Collection`
+        -   `Documents`
+    -   `Collection`은 `Documents`의 그룹
+    -   Realtime
+
+-   #### Create Documents
+    -   `firebase.firestore().collection("COLLECTION NAME").add(SOMETHING)`
+
+```tsx
+const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await dbService.collection("COLLECTION NAME").add({
+        // something you want
+    });
+};
+```
+
+-   #### Read Documents
+    -   `firebase.firestore().collection("COLLECTION NAME").get()`
+
+```tsx
+const getSomething = async () => {
+    const data: firebase.default.firestore.QuerySnapshot = await dbService
+        .collection("someCollection")
+        .get();
+
+    data.forEach((doc: firebase.default.firestore.QueryDocumentSnapshot) => {
+        const someObject = {
+            ...doc.data(),
+            id: doc.id,
+        };
+
+        setSomething((prev) => [someObject, ...prev]);
+    });
+};
+```
+
+-   #### Checking writer
+
+```tsx
+authService.onAuthStateChanged((user) => {
+    console.log(user + "<<< This is your user !!");
+});
+```
+
+-   #### onSnapshot
+    -   eventListener 속성을 가지며 해당 collection이 init, create, update, delete될 때를 감지
+    -   `firebase.firestore().collection("COLLECTION NAME").onSnapshot()`
+
+```tsx
+dbService.collection("someCollection").onSnapshot((snapshot) => {
+    const someArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        // something you want
+    }));
+    setSomething(ohweetsArray);
+});
+```
+
+-   #### Delete Documents
+    -   `firebase.firestore().doc("COLLECTION NAME/DOC ID").delete()`
+
+```tsx
+const onDelete = async () => {
+    const isOk = window.confirm("Are you sure?");
+    if (isOk) {
+        await dbService.doc(`someCollection/${someDoc.id}`).delete();
+    }
+};
+```
+
+-   #### Update Documents
+    -   `firebase.firestore().doc("COLLECTION NAME/DOC ID").update({updateTable: data})`
+
+```tsx
+const onUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await dbService.doc(`someCollection/${someDoc.id}`).update({
+        text: newText,
+    });
+    setIsEdit(false);
+};
+```
