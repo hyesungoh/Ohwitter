@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import { dbService } from "FBase";
 
 const Home = () => {
     const [text, setText] = useState<string>("");
 
-    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        await dbService.collection("ohweets").add({
+            text,
+            createdAt: Date.now(),
+        });
+
+        setText("");
     };
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +31,7 @@ const Home = () => {
                     onChange={onChange}
                     type="text"
                     placeholder="What's yout mind?"
+                    maxLength={120}
                 />
                 <input type="submit" value="Post It" />
             </form>
