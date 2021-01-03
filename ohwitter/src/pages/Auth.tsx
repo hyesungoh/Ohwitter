@@ -8,6 +8,7 @@ const Auth = () => {
     const [newAccount, setNewAccount] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
 
+
     const onChange = (event: Event | any) => {
         const {
             target: { name, value },
