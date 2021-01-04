@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { dbService } from "FBase";
+import { dbService, storageService } from "FBase";
 
 interface OhwheetProps {
-    ohweetObj: any;
+    ohweetObj: {
+        id: number;
+        text: string;
+        createdAt: string;
+        writer: string;
+        fileURL: string;
+    };
     isOwner: boolean;
 }
 
@@ -16,6 +22,7 @@ const Ohweet = ({ ohweetObj, isOwner }: OhwheetProps) => {
         const isOk = window.confirm("Are you sure?");
         if (isOk) {
             await dbService.doc(`ohweets/${ohweetObj.id}`).delete();
+            await storageService.refFromURL(ohweetObj.fileURL).delete();
         }
     };
 
@@ -52,7 +59,17 @@ const Ohweet = ({ ohweetObj, isOwner }: OhwheetProps) => {
                     <button onClick={toggleEdit}>Cancel</button>
                 </>
             ) : (
-                <h4>{ohweetObj.text}</h4>
+                <>
+                    <h4>{ohweetObj.text}</h4>
+                    {ohweetObj.fileURL && (
+                        <img
+                            src={ohweetObj.fileURL}
+                            alt={ohweetObj.text}
+                            width="100px"
+                            height="100px"
+                        />
+                    )}
+                </>
             )}
 
             {isOwner && (

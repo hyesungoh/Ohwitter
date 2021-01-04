@@ -11,7 +11,7 @@ interface HomeProps {
 const Home = ({ userObj }: HomeProps) => {
     const [text, setText] = useState<string>("");
     const [ohweets, setOhweets] = useState<any[]>([]);
-    const [ohweetFile, setOhwheetFile] = useState<string | null>();
+    const [ohweetFile, setOhweetFile] = useState<string>("");
 
     useEffect(() => {
         // getOhweets();
@@ -43,20 +43,29 @@ const Home = ({ userObj }: HomeProps) => {
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const fileRef = storageService.ref().child(`${userObj?.uid}/${uuid()}`);
-        const response = await fileRef.putString(
-            ohweetFile as string,
-            "data_url"
-        );
-        console.log(response);
 
-        // await dbService.collection("ohweets").add({
-        //     text,
-        //     createdAt: Date.now(),
-        //     writer: userObj?.uid,
-        // });
+        let fileURL: string = "";
+        if (ohweetFile !== "") {
+            const fileRef = storageService
+                .ref()
+                .child(`${userObj?.uid}/${uuid()}`);
+            const response = await fileRef.putString(
+                ohweetFile as string,
+                "data_url"
+            );
+            fileURL = await response.ref.getDownloadURL();
+        }
 
-        // setText("");
+        const tempOhweet = {
+            text,
+            createdAt: Date.now(),
+            writer: userObj?.uid,
+            fileURL,
+        };
+
+        await dbService.collection("ohweets").add(tempOhweet);
+        setText("");
+        setOhweetFile("");
     };
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,12 +84,12 @@ const Home = ({ userObj }: HomeProps) => {
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            setOhwheetFile(reader.result as string);
+            setOhweetFile(reader.result as string);
         };
         reader.readAsDataURL(theFile as Blob);
     };
 
-    const onClearOhweetFile = () => setOhwheetFile(null);
+    const onClearOhweetFile = () => setOhweetFile("");
 
     return (
         <div>
