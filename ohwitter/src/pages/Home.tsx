@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { dbService } from "FBase";
+import { dbService, storageService } from "FBase";
+import { v4 as uuid } from "uuid";
+
 import Ohweet from "components/Ohweet";
 
 interface HomeProps {
@@ -9,6 +11,7 @@ interface HomeProps {
 const Home = ({ userObj }: HomeProps) => {
     const [text, setText] = useState<string>("");
     const [ohweets, setOhweets] = useState<any[]>([]);
+    const [ohweetFile, setOhwheetFile] = useState<string | null>();
 
     useEffect(() => {
         // getOhweets();
@@ -40,14 +43,20 @@ const Home = ({ userObj }: HomeProps) => {
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const fileRef = storageService.ref().child(`${userObj?.uid}/${uuid()}`);
+        const response = await fileRef.putString(
+            ohweetFile as string,
+            "data_url"
+        );
+        console.log(response);
 
-        await dbService.collection("ohweets").add({
-            text,
-            createdAt: Date.now(),
-            writer: userObj !== null ? userObj.uid : "error",
-        });
+        // await dbService.collection("ohweets").add({
+        //     text,
+        //     createdAt: Date.now(),
+        //     writer: userObj?.uid,
+        // });
 
-        setText("");
+        // setText("");
     };
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +66,22 @@ const Home = ({ userObj }: HomeProps) => {
 
         setText(value);
     };
+
+    const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {
+            target: { files },
+        } = event;
+        const theFile = files?.[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            setOhwheetFile(reader.result as string);
+        };
+        reader.readAsDataURL(theFile as Blob);
+    };
+
+    const onClearOhweetFile = () => setOhwheetFile(null);
+
     return (
         <div>
             <form onSubmit={onSubmit}>
@@ -67,7 +92,19 @@ const Home = ({ userObj }: HomeProps) => {
                     placeholder="What's yout mind?"
                     maxLength={120}
                 />
+                <input type="file" accept="image/*" onChange={onFileChange} />
                 <input type="submit" value="Post It" />
+                {ohweetFile && (
+                    <div>
+                        <img
+                            src={ohweetFile}
+                            alt="temp"
+                            width="50px"
+                            height="50px"
+                        />
+                        <button onClick={onClearOhweetFile}>Clear</button>
+                    </div>
+                )}
             </form>
 
             <div>
@@ -75,7 +112,7 @@ const Home = ({ userObj }: HomeProps) => {
                     <Ohweet
                         key={ohweet.id}
                         ohweetObj={ohweet}
-                        isOwner={ohweet.writer === (userObj !== null? userObj.uid : "")}
+                        isOwner={ohweet.writer === userObj?.uid}
                     />
                 ))}
             </div>

@@ -59,7 +59,52 @@ const someFunc = () => {
 ```
 
 #### setState with function
+
     - setState 시 함수를 전달하면 이전 값에 접근할 수 있음
+
 ```tsx
 setSomething((prev) => [newData, ...prev]);
+```
+
+#### Inline check
+
+```tsx
+// const theFile = files[0];
+// it comes Object is possibly 'null' error
+
+const theFile = files?.[0];
+```
+
+#### FileReader
+
+```tsx
+const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // files == fileList
+    const {
+        target: { files },
+    } = event;
+    // prevent Object possibly error
+    const theFile = files?.[0];
+
+    const reader = new FileReader();
+    // onLoadEnd eventListen
+    reader.onloadend = () => {
+        // setState result
+        setSome(reader.result as string);
+    };
+    // calling onLoadEnd
+    reader.readAsDataURL(theFile as Blob);
+};
+```
+
+#### UUID
+
+```terminal
+npm i uuid
+npm i @types/uuid
+```
+
+```tsx
+import { v4 as uuid } from "uuid";
+console.log(uuid()); // it comes OSADIUOASUHDUIWHDIUASNID like that
 ```
