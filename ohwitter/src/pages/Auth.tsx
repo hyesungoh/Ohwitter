@@ -8,7 +8,6 @@ const Auth = () => {
     const [newAccount, setNewAccount] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
 
-
     const onChange = (event: Event | any) => {
         const {
             target: { name, value },
@@ -44,12 +43,12 @@ const Auth = () => {
     };
 
     const toggleSign = () => setNewAccount((prev) => !prev);
-    
+
     const onClickSocial = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
         const { name } = event.target as HTMLButtonElement;
-        
+
         let provider: any;
         if (name === "google") {
             provider = new firebaseInstance.auth.GoogleAuthProvider();

@@ -39,7 +39,7 @@ Backend as Service
 
 ```terminal
 // for TypeScript
-npm create-reate-app ohwitter --template typescript
+npx create-reate-app ohwitter --template typescript
 ```
 
 ```terminal
@@ -47,7 +47,7 @@ npm create-reate-app ohwitter --template typescript
 yarn eject
 rm -rf node_modules
 yarn
-rn add node-sass sass-loader
+yarn add node-sass sass-loader
 ```
 
 ```js
@@ -297,3 +297,88 @@ const onUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsEdit(false);
 };
 ```
+
+-   #### Using Firebase Storage
+
+```ts
+import "firebase/storage";
+...
+
+export const storageService: firebase.storage.Storage = firebase.storage();
+```
+
+-   #### Upload image with create reference
+
+```tsx
+// storageService.ref().child("REFERENCE NAME/FILE NAME")
+const fileRef = storageService.ref().child(`${userObj?.uid}/${uuid()}`);
+// fileRef.putString(file data, data classification);
+const response = await fileRef.putString("FILE URL", "data_url");
+```
+
+-   #### Get download URL
+
+```tsx
+fileURL = await response.ref.getDownloadURL();
+```
+
+-   #### Delete Image with find reference
+
+```tsx
+await storageService.refFromURL(obj.fileURL).delete();
+```
+
+-   #### Get data using where
+    -   where을 이용하여 필터링 가능
+
+```tsx
+const func = async () => {
+    const datas = await dbService
+        .collection("COLLECTION_NAME")
+        .where("something", "==", someObj?.uid)
+        .get();
+};
+```
+
+-   #### sorting data
+
+```tsx
+const datas = await dbService
+    .collection("COLLECTION_NAME")
+    .where("something", "==", someObj?.uid)
+    .orderBy("createdAt", "desc");
+// or .orderBy("createdAt", "asc");
+```
+
+-   #### Using query
+    -   error에 나온 url을 이용하여 index를 생성하여 사용 가능
+
+```tsx
+const func = async () => {
+    const datas = await dbService
+        .collection("COLLECTION_NAME")
+        .where("something", "==", someObj?.uid)
+        .orderBy("createdAt")
+        .get();
+};
+```
+
+-   #### Firebase user with more detail
+
+    -   firestore에 user collection을 이용하면 기본적으로 제공되는 authentication외의 다양한 정보를 저장, 사용 가능
+
+-   #### Update Profile
+
+    -   firebase의 updateProfile method는 displayName, photoUrl만 변경이 가능
+
+```tsx
+await userObj?.updateProfile({
+    displayName: newName,
+    photoURL: someURL,
+});
+```
+
+-   #### Security of API key
+        - browser key setting에 doamin을 추가하여 다른 domain에서 접근하는 것을 막을 수 있음
+        - 배포, localhost, firebaseapp domain을 추가하면 됨
+    ![스크린샷 2021-01-24 오후 8 09 30](https://user-images.githubusercontent.com/26461307/105628501-a743df00-5e80-11eb-9284-785a091123d9.png)

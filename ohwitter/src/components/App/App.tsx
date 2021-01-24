@@ -12,6 +12,8 @@ function App() {
         authService.onAuthStateChanged((user) => {
             if (user) {
                 setUserObj(user);
+            } else {
+                setUserObj(null);
             }
             setInit(true);
         });
@@ -25,7 +27,11 @@ function App() {
     return (
         <>
             {init ? (
-                <AppRouter refreshUser={refreshUser} isLoggedIn={Boolean(userObj)} userObj={userObj} />
+                <AppRouter
+                    refreshUser={refreshUser}
+                    isLoggedIn={Boolean(userObj)}
+                    userObj={userObj}
+                />
             ) : (
                 "Loading..."
             )}
