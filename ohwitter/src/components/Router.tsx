@@ -8,13 +8,14 @@ import Navigation from "components/Navigation";
 
 interface AppRouterProps {
     isLoggedIn: boolean;
-    userObj: firebase.default.User | null
+    userObj: firebase.default.User | null;
+    refreshUser: Function;
 }
 
-const AppRouter = ({ isLoggedIn, userObj }: AppRouterProps) => {
+const AppRouter = ({ refreshUser, isLoggedIn, userObj }: AppRouterProps) => {
     return (
         <BrowserRouter>
-            {isLoggedIn && <Navigation userObj={userObj}/>}
+            {isLoggedIn && <Navigation userObj={userObj} />}
             <Switch>
                 {isLoggedIn ? (
                     <>
@@ -22,7 +23,7 @@ const AppRouter = ({ isLoggedIn, userObj }: AppRouterProps) => {
                             <Home userObj={userObj} />
                         </Route>
                         <Route exact path="/profile">
-                            <Profile userObj={userObj}/>
+                            <Profile refreshUser={refreshUser} userObj={userObj} />
                         </Route>
                     </>
                 ) : (

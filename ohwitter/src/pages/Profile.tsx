@@ -4,9 +4,10 @@ import { useHistory } from "react-router-dom";
 
 interface ProfileInterface {
     userObj: firebase.default.User | null;
+    refreshUser: Function;
 }
 
-const Profile = ({ userObj }: ProfileInterface) => {
+const Profile = ({ refreshUser, userObj }: ProfileInterface) => {
     const [newName, setNewName] = useState<any>(userObj?.displayName);
     const history = useHistory();
 
@@ -40,6 +41,7 @@ const Profile = ({ userObj }: ProfileInterface) => {
             await userObj?.updateProfile({
                 displayName: newName,
             });
+            refreshUser();
         }
     };
 
