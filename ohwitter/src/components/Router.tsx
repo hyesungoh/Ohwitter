@@ -14,7 +14,7 @@ interface AppRouterProps {
 const AppRouter = ({ isLoggedIn, userObj }: AppRouterProps) => {
     return (
         <BrowserRouter>
-            {isLoggedIn && <Navigation />}
+            {isLoggedIn && <Navigation userObj={userObj}/>}
             <Switch>
                 {isLoggedIn ? (
                     <>
