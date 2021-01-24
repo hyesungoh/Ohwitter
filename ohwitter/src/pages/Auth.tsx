@@ -44,7 +44,7 @@ const Auth = () => {
     };
 
     const toggleSign = () => setNewAccount((prev) => !prev);
-
+    
     const onClickSocial = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
